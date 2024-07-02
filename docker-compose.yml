@@ -1,33 +1,36 @@
-version: "3.8"
+version: "3"
 services:
   dropbase-client:
     image: dropbase/client:0.4.6
     ports:
       - "3030:80"
+
   dropbase-server:
     image: dropbase/server:0.4.10
     volumes:
       - ./workspace:/project/workspace
       - ./files:/project/files
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./server.toml:/project/server.toml
-      - ./worker.toml:/project/worker.toml
+      - ./server.toml:/project/server.toml  # Ensure this is a file
+      - ./worker.toml:/project/worker.toml  # Ensure this is a file
     ports:
       - "9090:9090"
     environment:
       - PYTHONUNBUFFERED=1
       - REDIS_HOST=redis
+
   dropbase-lsp:
     image: dropbase/lsp:0.0.6
     volumes:
       - ./workspace:/project/workspace
       - ./files:/project/files
-      # Attach custom volumes here
+      # Attach custom volumes here if needed
     ports:
       - "9095:9095"
     environment:
       - PYTHONUNBUFFERED=1
+
   redis:
     image: redis
     ports:
-      - 6379:6379
+      - "6379:6379"
